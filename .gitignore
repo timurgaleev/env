@@ -1,0 +1,67 @@
+# Mac
+.DS_Store
+.DS_Store?
+
+# Windows image file caches
+Thumbs.db
+ehthumbs.db
+
+# Folder config file
+Desktop.ini
+
+# Recycle Bin used on file shares
+$RECYCLE.BIN/
+
+# Windows shortcuts
+*.lnk
+
+# java
+*.class
+*.jar
+*.war
+*.ear
+
+# frontend
+dist
+node_modules
+out-tsc
+npm-debug.log
+npm-debug.log*
+coverage
+
+# pytest
+__pycache__
+.pytest_cache
+
+# Terraform
+.terraform/
+.terraform.tfstate.lock.info
+terraform.tfstate.backup
+terraform.tfstate
+terraform.tfplan
+
+# maven
+build/
+builds/
+config/
+target/
+
+# eclipse
+.settings
+.classpath
+.project
+.metadata
+.recommenders
+.build.log
+
+# JetBrains
+.idea/
+*.iml
+*.swp
+
+# Vagrant
+.vagrant
+
+# VSCode
+*.code-workspace
+.history
