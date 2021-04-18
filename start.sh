@@ -37,6 +37,7 @@ _error() {
 
 _prepare() {
   echo "================================================================================"
+  echo "================================================================================"
   echo "${OS_NAME} [${INSTALLER}]"
   echo "================================================================================"
 
@@ -84,11 +85,11 @@ _install_brew() {
   command -v $1 > /dev/null || brew install ${2:-$1}
 }
 
-_install_brew_apps() {
+_install_brew_cask() {
   INSTALLED=$(ls /Applications | grep $1 | wc -l | xargs)
 
   if [ "x${INSTALLED}" == "x0" ]; then
-    brew install -cask ${2:-$1}
+    brew install --cask ${2:-$1}
   fi
 }
 
@@ -128,14 +129,11 @@ _install() {
       _install_brew tmux
       _install_brew wget
       _install_brew zsh
-
-
-      _install_brew tfenv
       _install_brew helm
-
       _install_brew kubectl kubernetes-cli
       _install_brew istioctl
       _install_brew k9s
+      _install_brew mvn maven
 
       command -v java > /dev/null || HAS_JAVA=false
       if [ ! -z ${HAS_JAVA} ]; then
@@ -143,16 +141,14 @@ _install() {
         brew install --cask adoptopenjdk8
       fi
 
-      _install_brew mvn maven
-
-      _install_brew_apps "Postman.app" postman
-      _install_brew_apps "DBeaver.app" dbeaver-community
-      _install_brew_apps "Rocket.Chat.app" rocket-chat
-      _install_brew_apps "Dropbox.app" dropbox
-      _install_brew_apps "Google Chrome.app" google-chrome
-      _install_brew_apps "iStat Menus.app" istat-menus
-      _install_brew_apps "iTerm.app" iterm2
-      _install_brew_apps "Visual Studio Code.app" visual-studio-code
+      _install_brew_cask "Postman.app" postman
+      _install_brew_cask "DBeaver.app" dbeaver-community
+      _install_brew_cask "Rocket.Chat.app" rocket-chat
+      _install_brew_cask "Dropbox.app" dropbox
+      _install_brew_cask "Google Chrome.app" google-chrome
+      _install_brew_cask "iStat Menus.app" istat-menus
+      _install_brew_cask "iTerm.app" iterm2
+      _install_brew_cask "Visual Studio Code.app" visual-studio-code
 
       brew cleanup
   fi
