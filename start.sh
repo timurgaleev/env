@@ -107,7 +107,10 @@ _install() {
 
       _install_brew argocd
       _install_brew aws awscli
+      _install_brew ctop
+      _install_brew direnv
       _install_brew fzf
+      _install_brew flyway
       _install_brew gh
       _install_brew git
       _install_brew go
@@ -118,8 +121,10 @@ _install() {
       _install_brew jsonnet
       _install_brew node
       _install_brew pyenv
+      _install_brew psql
       _install_brew telnet
       _install_brew terraform-docs
+      _install_brew terragrunt
       _install_brew tmux
       _install_brew wget
       _install_brew zsh
@@ -185,5 +190,5 @@ _prepare
 
 _install
 
-# _aliases ".bashrc"
-# _aliases ".zshrc"
+_aliases ".bashrc"
+_aliases ".zshrc"
