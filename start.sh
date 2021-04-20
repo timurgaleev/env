@@ -116,12 +116,14 @@ _install() {
       _install_brew git
       _install_brew go
       _install_brew grpcurl
+      _install_brew gping
       _install_brew http httpie
       _install_brew jenv
       _install_brew jq
       _install_brew jsonnet
       _install_brew node
       _install_brew pyenv
+      _install_brew pipenv
       _install_brew psql
       _install_brew telnet
       _install_brew terraform-docs
