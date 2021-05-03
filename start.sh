@@ -118,6 +118,7 @@ _install() {
       _install_brew grpcurl
       _install_brew gping
       _install_brew http httpie
+      _install_brew iglance
       _install_brew jenv
       _install_brew jq
       _install_brew jsonnet
@@ -148,7 +149,7 @@ _install() {
       _install_brew_cask "Rocket.Chat.app" rocket-chat
       _install_brew_cask "Dropbox.app" dropbox
       _install_brew_cask "Google Chrome.app" google-chrome
-      _install_brew_cask "iStat Menus.app" istat-menus
+      # _install_brew_cask "iStat Menus.app" istat-menus
       _install_brew_cask "iTerm.app" iterm2
       _install_brew_cask "Visual Studio Code.app" visual-studio-code
 
