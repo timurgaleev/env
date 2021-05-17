@@ -152,6 +152,7 @@ _install() {
       # _install_brew_cask "iStat Menus.app" istat-menus
       _install_brew_cask "iTerm.app" iterm2
       _install_brew_cask "Visual Studio Code.app" visual-studio-code
+      _install_brew_cask "KeePassXC" keepassxc
 
       brew cleanup
   fi
