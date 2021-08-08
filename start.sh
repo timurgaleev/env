@@ -81,12 +81,19 @@ EOF
   fi
 }
 
+_done() {
+  echo "================================================================================"
+  echo "================================================================================"
+  echo "Finished"
+  echo "================================================================================"
+}
+
 _install_brew() {
   command -v $1 > /dev/null || brew install ${2:-$1}
 }
 
 _install_brew_cask() {
-  INSTALLED=$(ls /Applications | grep $1 | wc -l | xargs)
+  INSTALLED="$(ls /Applications | grep $1 | wc -l | xargs)"
 
   if [ "x${INSTALLED}" == "x0" ]; then
     brew install --cask ${2:-$1}
@@ -155,7 +162,8 @@ _install() {
       # _install_brew_cask "iStat Menus.app" istat-menus
       _install_brew_cask "iTerm.app" iterm2
       _install_brew_cask "Visual Studio Code.app" visual-studio-code
-      _install_brew_cask "KeePassXC" keepassxc
+      _install_brew_cask "KeePassXC.app" keepassxc
+      _install_brew_cask "Test.app" test
 
       brew cleanup
   fi
@@ -195,3 +203,5 @@ _install
 
 _aliases ".bashrc"
 _aliases ".zshrc"
+
+_done
