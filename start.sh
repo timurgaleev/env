@@ -132,10 +132,12 @@ _install() {
       _install_brew tmux
       _install_brew wget
       _install_brew zsh
+      _install_brew zsh-syntax-highlighting
       _install_brew helm
       _install_brew kubectl kubernetes-cli
       _install_brew istioctl
       _install_brew k9s
+      _install_brew kube-ps1
       _install_brew mvn maven
       _install_brew graphviz
 
