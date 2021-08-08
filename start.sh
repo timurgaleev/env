@@ -138,7 +138,6 @@ _install() {
       _install_brew k9s
       _install_brew mvn maven
       _install_brew graphviz
-      _install_brew blastradius
 
       command -v java > /dev/null || HAS_JAVA=false
       if [ ! -z ${HAS_JAVA} ]; then
