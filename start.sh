@@ -140,6 +140,7 @@ _install() {
       _install_brew wget
       _install_brew zsh
       _install_brew zsh-syntax-highlighting
+      _install_brew zsh-autosuggestions
       _install_brew helm
       _install_brew kubectl kubernetes-cli
       _install_brew istioctl
@@ -147,6 +148,7 @@ _install() {
       _install_brew kube-ps1
       _install_brew mvn maven
       _install_brew graphviz
+      _install_brew lsd
 
       command -v java > /dev/null || HAS_JAVA=false
       if [ ! -z ${HAS_JAVA} ]; then

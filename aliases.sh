@@ -28,6 +28,11 @@ alias top="htop"
 alias histg="history | grep"
 alias ping="gping"
 alias dt='date -u +"%Y-%m-%dT%H:%M:%SZ"'
+alias ll='lsd -l'
+alias l='lsd -al'
+
+alias xs='cd'
+alias vf='cd'
 
 
 ############################################################################
