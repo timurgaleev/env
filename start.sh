@@ -115,6 +115,7 @@ _install() {
 
       _install_brew argocd
       _install_brew aws awscli
+      _install_brew aws-sam-cli
       _install_brew ctop
       _install_brew direnv
       _install_brew fzf
@@ -143,6 +144,7 @@ _install() {
       _install_brew zsh-autosuggestions
       _install_brew helm
       _install_brew kubectl kubernetes-cli
+      _install_brew kusmotize
       _install_brew istioctl
       _install_brew k9s
       _install_brew kube-ps1
