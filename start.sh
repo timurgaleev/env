@@ -113,6 +113,7 @@ _install() {
         brew link --force gnu-getopt
       fi
 
+      _install_brew argo
       _install_brew argocd
       _install_brew aws awscli
       _install_brew aws-sam-cli
