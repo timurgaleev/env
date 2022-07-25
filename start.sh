@@ -118,6 +118,7 @@ _install() {
       _install_brew aws awscli
       _install_brew aws-sam-cli
       _install_brew ctop
+      _install_brew btop
       _install_brew direnv
       _install_brew fzf
       _install_brew flyway
