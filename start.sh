@@ -163,7 +163,7 @@ _install() {
       _install_brew_cask "Postman.app" postman
       _install_brew_cask "DBeaver.app" dbeaver-community
       _install_brew_cask "Rocket.Chat.app" rocket-chat
-      _install_brew_cask "Dropbox.app" dropbox
+      # _install_brew_cask "Dropbox.app" dropbox
       _install_brew_cask "Google Chrome.app" google-chrome
       # _install_brew_cask "iStat Menus.app" istat-menus
       _install_brew_cask "iTerm.app" iterm2
