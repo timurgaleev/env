@@ -1,7 +1,7 @@
 #!/usr/bin/env bash
 
 OS_NAME="$(uname | awk '{print tolower($0)}')"
-OS_ARCH="$(uname -m)"
+OS_ARCH_NAME="$(uname -m)"
 
 if [ "${OS_NAME}" == "darwin" ]; then
   INSTALLER="brew"
@@ -13,6 +13,24 @@ fi
 
 command -v tput > /dev/null && TPUT=true
 
+_result() {
+  _echo "# $@" 4
+}
+
+_command() {
+  _echo "$ $@" 3
+}
+
+_success() {
+  _echo "+ $@" 2
+  exit 0
+}
+
+_error() {
+  _echo "- $@" 1
+  exit 1
+}
+
 _echo() {
   if [ "${TPUT}" != "" ] && [ "$2" != "" ]; then
     echo -e "$(tput setaf $2)$1$(tput sgr0)"
@@ -21,63 +39,9 @@ _echo() {
   fi
 }
 
-_success() {
-  _echo "+ $@" 2
-  exit 0
-}
-
-_result() {
-  _echo "# $@" 4
-}
-
-_error() {
-  _echo "- $@" 1
-  exit 1
-}
-
-_prepare() {
-  echo "================================================================================"
-  echo "================================================================================"
-  echo "${OS_NAME} [${INSTALLER}]"
-  echo "================================================================================"
-
-  if [ "${INSTALLER}" == "" ]; then
-    _error "Not supported OS."
-  fi
-
-  mkdir -p ~/.aws
-  mkdir -p ~/.ssh
-
-  # ssh keygen
-  [ ! -f ~/.ssh/id_rsa ] && ssh-keygen -q -f ~/.ssh/id_rsa -N ''
-
-  # ssh config
-  if [ ! -f ~/.ssh/config ]; then
-cat <<EOF > ~/.ssh/config
-Host *
-    StrictHostKeyChecking no
-EOF
-  fi
-  chmod 400 ~/.ssh/config
-
-  # brew for mac
-  if [ "${INSTALLER}" == "brew" ]; then
-    command -v brew > /dev/null || HAS_BREW=false
-
-    if [ ! -z ${HAS_BREW} ]; then
-      sudo xcodebuild -license
-      xcode-select --install
-
-      /bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh)"
-    fi
-
-    if [ "${OS_ARCH}" == "arm64" ]; then
-      command -v ibrew > /dev/null || HAS_IBREW=false
-
-      if [ ! -z ${HAS_IBREW} ]; then
-        /bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh)"
-      fi
-    fi
+_backup() {
+  if [ -f $1 ] && [ ! -f $1.backup ]; then
+    cp $1 $1.backup
   fi
 }
 
@@ -88,126 +52,74 @@ _done() {
   echo "================================================================================"
 }
 
-_install_brew() {
-  command -v $1 > /dev/null || brew install ${2:-$1}
-}
+echo "================================================================================"
+echo "================================================================================"
+echo "${OS_NAME} [${INSTALLER}]"
+echo "================================================================================"
 
-_install_brew_cask() {
-  INSTALLED="$(ls /Applications | grep $1 | wc -l | xargs)"
+if [ "${INSTALLER}" == "" ]; then
+  _error "Not supported OS."
+fi
 
-  if [ "x${INSTALLED}" == "x0" ]; then
-    brew install --cask ${2:-$1}
-  fi
-}
+mkdir -p ~/.aws
+mkdir -p ~/.ssh
 
-_install() {
-  echo "================================================================================"
+# ssh config
+if [ ! -f ~/.ssh/config ]; then
+cat <<EOF > ~/.ssh/config
+Host *
+    StrictHostKeyChecking no
+EOF
+fi
+chmod 400 ~/.ssh/config
 
-  if [ "${INSTALLER}" == "brew" ]; then
-      brew update && brew upgrade
+####### xcodebuild
+if [ "${OS_NAME}" == "darwin" ]; then
+  command -v xcode-select >/dev/null || HAS_XCODE=false
+  if [ ! -z ${HAS_XCODE} ]; then
+    _command "xcode-select --install"
+    sudo xcodebuild -license
+    xcode-select --install
 
-      # getopt
-      GETOPT=$(getopt 2>&1 | head -1 | xargs)
-      if [ "${GETOPT}" == "--" ]; then
-        brew install gnu-getopt
-        brew link --force gnu-getopt
-      fi
-
-      _install_brew argo
-      _install_brew argocd
-      _install_brew aws awscli
-      _install_brew aws-sam-cli
-      _install_brew ctop
-      _install_brew btop
-      _install_brew direnv
-      _install_brew fzf
-      _install_brew flyway
-      _install_brew gh
-      _install_brew git
-      _install_brew go
-      _install_brew grpcurl
-      _install_brew gping
-      _install_brew http httpie
-      _install_brew iglance
-      _install_brew jenv
-      _install_brew jq
-      _install_brew jsonnet
-      _install_brew node
-      _install_brew pyenv
-      _install_brew pipenv
-      _install_brew psql
-      _install_brew telnet
-      _install_brew terraform-docs
-      _install_brew terragrunt
-      _install_brew tmux
-      _install_brew wget
-      _install_brew zsh
-      _install_brew zsh-syntax-highlighting
-      _install_brew zsh-autosuggestions
-      _install_brew helm
-      _install_brew kubectl kubernetes-cli
-      _install_brew kusmotize
-      _install_brew istioctl
-      _install_brew k9s
-      _install_brew kube-ps1
-      _install_brew mvn maven
-      _install_brew graphviz
-      _install_brew lsd
-
-      command -v java > /dev/null || HAS_JAVA=false
-      if [ ! -z ${HAS_JAVA} ]; then
-        brew tap AdoptOpenJDK/openjdk
-        brew install --cask adoptopenjdk8
-      fi
-
-      _install_brew_cask "Postman.app" postman
-      _install_brew_cask "DBeaver.app" dbeaver-community
-      _install_brew_cask "Rocket.Chat.app" rocket-chat
-      # _install_brew_cask "Dropbox.app" dropbox
-      _install_brew_cask "Google Chrome.app" google-chrome
-      # _install_brew_cask "iStat Menus.app" istat-menus
-      _install_brew_cask "iTerm.app" iterm2
-      _install_brew_cask "Visual Studio Code.app" visual-studio-code
-      _install_brew_cask "KeePassXC.app" keepassxc
-      _install_brew_cask "Test.app" test
-
-      brew cleanup
-  fi
-}
-
-_aliases() {
-  TARGET=${HOME}/${1}
-
-  ALIASES="${HOME}/.aliases"
-
-  curl -sL -o ${ALIASES} timurgaleev.github.io/env/aliases.sh
-
-  if [ -f "${ALIASES}" ]; then
-    touch ${TARGET}
-    HAS_ALIAS="$(cat ${TARGET} | grep '.aliases' | wc -l | xargs)"
-
-    if [ "x${HAS_ALIAS}" == "x0" ]; then
-      echo "" >> ${TARGET}
-      echo "if [ -f ~/.aliases ]; then" >> ${TARGET}
-      echo "  source ~/.aliases" >> ${TARGET}
-      echo "fi" >> ${TARGET}
-      echo "" >> ${TARGET}
-      echo "if [ -d /opt/homebrew/bin ]; then" >> ${TARGET}
-      echo "  export PATH=\"/opt/homebrew/bin:$PATH\"" >> ${TARGET}
-      echo "fi" >> ${TARGET}
+    if [ "${OS_ARCH}" == "arm64" ]; then
+      sudo softwareupdate --install-rosetta --agree-to-license
     fi
-
-    source ${ALIASES}
   fi
-}
+fi
 
-################################################################################
+######## .aliases
+_backup ~/.aliases
+curl -fsSL -o ~/.aliases https://raw.githubusercontent.com/timurgaleev/env/main/.aliases
 
-_prepare
 
-_install
+####### Install Brew
+command -v brew >/dev/null || HAS_BREW=false
+if [ ! -z ${HAS_BREW} ]; then
+  _command "brew install..."
+  /bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh)"
+  if [ -d /opt/homebrew/bin ]; then
+    eval "$(/opt/homebrew/bin/brew shellenv)"
+  elif [ -d /home/linuxbrew ]; then
+    eval "$(/home/linuxbrew/.linuxbrew/bin/brew shellenv)"
+  else
+    eval "$(brew shellenv)"
+  fi
+fi
 
-_aliases ".bashrc"
-_aliases ".zshrc"
+_command "brew update..."
+brew update
+
+_command "brew upgrade..."
+brew upgrade
+
+# Brewfile
+_backup ~/.Brewfile
+curl -fsSL -o ~/.Brewfile https://raw.githubusercontent.com/timurgaleev/env/main/brewpackages
+
+_command "brew bundle..."
+brew bundle --file=~/.Brewfile
+
+_command "brew cleanup..."
+brew cleanup
 
 _done
