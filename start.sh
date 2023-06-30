@@ -73,7 +73,7 @@ EOF
 fi
 chmod 400 ~/.ssh/config
 
-####### xcodebuild
+####### xcode
 if [ "${OS_NAME}" == "darwin" ]; then
   command -v xcode-select >/dev/null || HAS_XCODE=false
   if [ ! -z ${HAS_XCODE} ]; then
@@ -112,7 +112,7 @@ brew update
 _command "brew upgrade..."
 brew upgrade
 
-# Brewfile
+#######  Brew packages
 _backup ~/.Brewfile
 curl -fsSL -o ~/.Brewfile https://raw.githubusercontent.com/timurgaleev/env/main/brewpackages
 
