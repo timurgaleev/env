@@ -113,11 +113,11 @@ _command "brew upgrade..."
 brew upgrade
 
 #######  Brew packages
-_backup ~/.Brewfile
-curl -fsSL -o ~/.Brewfile https://raw.githubusercontent.com/timurgaleev/env/main/brewpackages
+_backup ~/.brewpackages
+curl -fsSL -o ~/.brewpackages https://raw.githubusercontent.com/timurgaleev/env/main/brewpackages
 
 _command "brew bundle..."
-brew bundle --file=~/.Brewfile
+brew bundle --file=~/.brewpackages
 
 _command "brew cleanup..."
 brew cleanup
