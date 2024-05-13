@@ -1,5 +1,6 @@
 tap "homebrew/bundle"
 tap "k8sgpt-ai/k8sgpt"
+tap "keidarcy/tap/e1s"
 
 brew "argo"
 brew "argocd"
