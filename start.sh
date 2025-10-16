@@ -233,8 +233,8 @@ _install_npm_package "ccusage" "ccusage"
 
 
 # Claude AI 설정
-_download ~/.claude/CLAUDE.md
-_download ~/.claude/settings.json
+_download .claude/CLAUDE.md
+_download .claude/settings.json
 
 # Cursor AI 설정
 _download .cursor/mcp.json
