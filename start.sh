@@ -50,7 +50,6 @@ _download() {
   local retry_count=0
   local wait_time=5
 
-  # 대상 파일의 디렉토리 자동 생성
   local target_file=~/$1
   local target_dir=$(dirname "$target_file")
   if [ "$target_dir" != "$HOME" ] && [ ! -d "$target_dir" ]; then
@@ -69,7 +68,7 @@ _download() {
   else
     _backup ~/$1
     while [ $retry_count -lt $max_retries ]; do
-      if curl -fsSL --connect-timeout 10 -o ~/$1 https://raw.githubusercontent.com/nalbam/env/main/${2:-$1}; then
+      if curl -fsSL --connect-timeout 10 -o ~/$1 https://raw.githubusercontent.com/timurgaleev/env/main/${2:-$1}; then
         break
       else
         retry_count=$((retry_count + 1))
@@ -217,10 +216,10 @@ brew upgrade
 
 #######  Brew packages
 _backup ~/.brewpackages
-curl -fsSL -o ~/.brewpackages https://raw.githubusercontent.com/timurgaleev/env/main/brewpackages
+curl -fsSL -o /tmp/.brewpackages https://raw.githubusercontent.com/timurgaleev/env/main/brewpackages
 
 _command "brew bundle..."
-brew bundle --file=~/.brewpackages
+brew bundle --file=/tmp/.brewpackages
 
 _command "brew cleanup..."
 brew cleanup
@@ -234,8 +233,8 @@ _install_npm_package "ccusage" "ccusage"
 
 
 # Claude AI 설정
-_download .claude/CLAUDE.md
-_download .claude/settings.json
+_download ~/.claude/CLAUDE.md
+_download ~/.claude/settings.json
 
 # Cursor AI 설정
 _download .cursor/mcp.json
