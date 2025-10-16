@@ -45,6 +45,109 @@ _backup() {
   fi
 }
 
+_download() {
+  local max_retries=3
+  local retry_count=0
+  local wait_time=5
+
+  # 대상 파일의 디렉토리 자동 생성
+  local target_file=~/$1
+  local target_dir=$(dirname "$target_file")
+  if [ "$target_dir" != "$HOME" ] && [ ! -d "$target_dir" ]; then
+    mkdir -p "$target_dir"
+  fi
+
+  if [ -f ~/.env/${2:-$1} ]; then
+    if [ -f ~/$1 ]; then
+      if [ "$(md5sum ~/.env/${2:-$1} | awk '{print $1}')" != "$(md5sum ~/$1 | awk '{print $1}')" ]; then
+        _backup ~/$1
+        cp ~/.env/${2:-$1} ~/$1
+      fi
+    else
+      cp ~/.env/${2:-$1} ~/$1
+    fi
+  else
+    _backup ~/$1
+    while [ $retry_count -lt $max_retries ]; do
+      if curl -fsSL --connect-timeout 10 -o ~/$1 https://raw.githubusercontent.com/nalbam/env/main/${2:-$1}; then
+        break
+      else
+        retry_count=$((retry_count + 1))
+        if [ $retry_count -eq $max_retries ]; then
+          _error "Failed to download ${2:-$1} after $max_retries attempts"
+        fi
+        _echo "Download failed, retrying in $wait_time seconds..." 3
+        sleep $wait_time
+        wait_time=$((wait_time * 2))
+      fi
+    done
+  fi
+
+  # Set appropriate permissions for sensitive files
+  case "$1" in
+    .ssh/* | .aws/* | *.backup)
+      chmod 600 ~/$1
+      ;;
+  esac
+}
+
+_install_npm_package() {
+  local package_name="$1"
+  local package_spec="$2"
+
+  # Check if package is installed
+  if npm list -g "$package_spec" >/dev/null 2>&1; then
+    local installed_version=$(npm list -g "$package_spec" --depth=0 2>/dev/null | grep "$package_name" | sed 's/.*@\([0-9.]*\).*/\1/')
+    local latest_version=$(npm view "$package_spec" version 2>/dev/null)
+
+    if [ -n "$installed_version" ] && [ -n "$latest_version" ]; then
+      if [ "$installed_version" != "$latest_version" ]; then
+        _command "Updating $package_name from $installed_version to $latest_version"
+        npm update -g "$package_spec"
+      # else
+      #   _result "$package_name is already up to date ($installed_version)"
+      fi
+    else
+      _command "Installing $package_name (version check failed)"
+      npm install -g "$package_spec"
+    fi
+  else
+    _command "Installing $package_name"
+    npm install -g "$package_spec"
+  fi
+}
+
+_install_pip_package() {
+  local package_name="$1"
+
+  command -v python3 >/dev/null || HAS_PYTHON=false
+  if [ ! -z ${HAS_PYTHON} ]; then
+    _result "Python3 not found, skipping pip package installation"
+    return 1
+  fi
+
+  # Check if package is installed
+  if python3 -m pip show "$package_name" >/dev/null 2>&1; then
+    local installed_version=$(python3 -m pip show "$package_name" 2>/dev/null | grep "Version:" | awk '{print $2}')
+    local latest_version=$(python3 -m pip index versions "$package_name" 2>/dev/null | grep "LATEST:" | awk '{print $2}')
+
+    if [ -n "$installed_version" ] && [ -n "$latest_version" ]; then
+      if [ "$installed_version" != "$latest_version" ]; then
+        _command "Updating $package_name from $installed_version to $latest_version"
+        python3 -m pip install --upgrade "$package_name"
+      # else
+      #   _result "$package_name is already up to date ($installed_version)"
+      fi
+    else
+      _command "Installing $package_name (version check failed)"
+      python3 -m pip install "$package_name"
+    fi
+  else
+    _command "Installing $package_name"
+    python3 -m pip install "$package_name"
+  fi
+}
+
 _done() {
   echo "================================================================================"
   echo "================================================================================"
@@ -121,5 +224,20 @@ brew bundle --file=~/.brewpackages
 
 _command "brew cleanup..."
 brew cleanup
+
+# NPM
+_install_npm_package "npm" "npm"
+_install_npm_package "corepack" "corepack"
+_install_npm_package "serverless" "serverless"
+_install_npm_package "claude-code" "@anthropic-ai/claude-code"
+_install_npm_package "ccusage" "ccusage"
+
+
+# Claude AI 설정
+_download .claude/CLAUDE.md
+_download .claude/settings.json
+
+# Cursor AI 설정
+_download .cursor/mcp.json
 
 _done

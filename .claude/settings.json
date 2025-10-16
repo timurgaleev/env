@@ -1,0 +1,41 @@
+{
+  "env": {
+    "MAX_THINKING_TOKENS": "31999"
+  },
+  "permissions": {
+    "allow": [
+      "Bash(bun:*)",
+      "Bash(cat:*)",
+      "Bash(chgrp:*)",
+      "Bash(chmod:*)",
+      "Bash(chown:*)",
+      "Bash(cp:*)",
+      "Bash(curl:*)",
+      "Bash(find:*)",
+      "Bash(for:*)",
+      "Bash(grep:*)",
+      "Bash(ln:*)",
+      "Bash(ls:*)",
+      "Bash(mkdir:*)",
+      "Bash(mv:*)",
+      "Bash(node:*)",
+      "Bash(npm:*)",
+      "Bash(npx:*)",
+      "Bash(pnpm:*)",
+      "Bash(touch:*)",
+      "Bash(tsc:*)",
+      "Bash(xargs:*)",
+      "Bash(yarn:*)",
+      "WebFetch(domain:docs.anthropic.com)",
+      "WebFetch(domain:docs.tosspayments.com)",
+      "WebFetch(domain:developer.paypal.com)",
+      "WebFetch(domain:jestjs.io)"
+    ],
+    "defaultMode": "acceptEdits"
+  },
+  "statusLine": {
+    "type": "command",
+    "command": "npx -y ccusage statusline",
+    "padding": 0
+  }
+}
