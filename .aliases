@@ -82,3 +82,7 @@ alias drmid=drmid-fn
 alias drun=drun-fn
 alias dsp="docker system prune --all"
 alias dsr=dsr-fn
+
+# Claude Code
+alias claude-bedrock='CLAUDE_CODE_USE_BEDROCK=1 AWS_PROFILE=timzu claude'
+alias claude-direct='CLAUDE_CODE_USE_BEDROCK=0 claude'
