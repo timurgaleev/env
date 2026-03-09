@@ -84,5 +84,5 @@ alias dsp="docker system prune --all"
 alias dsr=dsr-fn
 
 # Claude Code
-alias claude-bedrock='CLAUDE_CODE_USE_BEDROCK=1 AWS_PROFILE=timzu claude'
+alias claude-bedrock='CLAUDE_CODE_USE_BEDROCK=1 AWS_PROFILE=timzu AWS_REGION=eu-central-1 ANTHROPIC_MODEL=eu.anthropic.claude-sonnet-4-6 claude'
 alias claude-direct='CLAUDE_CODE_USE_BEDROCK=0 claude'
