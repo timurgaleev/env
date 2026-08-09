@@ -183,7 +183,7 @@ if [ "${OS_NAME}" == "darwin" ]; then
     sudo xcodebuild -license
     xcode-select --install
 
-    if [ "${OS_ARCH}" == "arm64" ]; then
+    if [ "${OS_ARCH_NAME}" == "arm64" ]; then
       sudo softwareupdate --install-rosetta --agree-to-license
     fi
   fi
